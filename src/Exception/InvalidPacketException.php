@@ -11,4 +11,3 @@ class InvalidPacketException extends \Exception
 {
 
 }
- 
