@@ -31,7 +31,7 @@ Usage
         return explode(',', $arg);
     });
     echo $response; // ['a', 'b', 'c']
-´´´
+```
 Running the tests
 -----------------
     vendor/bin/phpspec run
