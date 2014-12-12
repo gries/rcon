@@ -111,9 +111,7 @@ class Message
      */
     public function initializeFromRconData($data)
     {
-        // @ is bad but we currently
-        // dont have a error handler here so just ignore warnings
-        $packet = @unpack("V1id/V1type/a*body", $data);
+        $packet = unpack("V1id/V1type/a*body", $data);
 
         if (!is_array($packet) ||
             !isset($packet['id']) ||
