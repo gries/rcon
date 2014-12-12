@@ -3,6 +3,10 @@ RCON
 
 This is a simple RCON-Client for php.
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/49b6b2b4-06a6-40c3-af3f-a921e790e0c6/big.png)](https://insight.sensiolabs.com/projects/49b6b2b4-06a6-40c3-af3f-a921e790e0c6)
+
+[![Build Status](https://travis-ci.org/gries/rcon.png?branch=master)](https://travis-ci.org/gries/rcon)
+
 Installation
 ------------
 
