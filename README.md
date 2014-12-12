@@ -12,7 +12,7 @@ RCON can be installed via. Composer:
 
 Usage
 -----------
-
+```php
     use gries\Rcon\ConnectionFactory;
     use gries\Rcon\Messenger;
 
@@ -31,7 +31,7 @@ Usage
         return explode(',', $arg);
     });
     echo $response; // ['a', 'b', 'c']
-
+´´´
 Running the tests
 -----------------
     vendor/bin/phpspec run
