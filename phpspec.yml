@@ -1,0 +1,4 @@
+suites:
+  gries_rcon_suite:
+    namespace: gries\Rcon
+    psr4_prefix: gries\Rcon

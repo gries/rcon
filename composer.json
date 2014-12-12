@@ -1,0 +1,23 @@
+{
+    "name":         "gries/rcon",
+    "description":  "PHP RCON Client",
+    "license":      "MIT",
+    "keywords":     ["RCON", "rcon"],
+    "type":         "library",
+    "authors":      [
+        {
+            "name":      "Christoph Rosse",
+            "email":     "christoph@rosse.at"
+        }
+    ],
+    "require": {
+        "clue/socket-raw": "~1.1"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.1"
+    },
+    "autoload": {
+        "psr-4": {"gries\\Rcon\\": "src"}
+    },
+    "minimum-stability": "dev"
+}
