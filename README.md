@@ -13,24 +13,24 @@ RCON can be installed via. Composer:
 Usage
 -----------
 ```php
-    use gries\Rcon\ConnectionFactory;
-    use gries\Rcon\Messenger;
+use gries\Rcon\ConnectionFactory;
+use gries\Rcon\Messenger;
 
-    require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
-    // setup the messenger
-    $connection = ConnectionFactory::create('example.com', 25575, 'mypass');
-    $messenger         = new Messenger($connection);
+// setup the messenger
+$connection = ConnectionFactory::create('example.com', 25575, 'mypass');
+$messenger         = new Messenger($connection);
 
-    // send a simple message
-    $response = $messenger->send('list');
-    echo $response; // a,b,c
+// send a simple message
+$response = $messenger->send('list');
+echo $response; // a,b,c
 
-    // send a message and parse the command via. a callable
-    $response = $messenger->send('list', function($arg) {
-        return explode(',', $arg);
-    });
-    echo $response; // ['a', 'b', 'c']
+// send a message and parse the command via. a callable
+$response = $messenger->send('list', function($arg) {
+    return explode(',', $arg);
+});
+echo $response; // ['a', 'b', 'c']
 ```
 Running the tests
 -----------------
