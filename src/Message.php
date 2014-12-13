@@ -111,8 +111,8 @@ class Message
      */
     public function initializeFromRconData($data)
     {
-        // 4 byte for each of the 3 segments = 12 byte
-        if (mb_strlen($data) < 12) {
+        // 8 byte for id + type and atleast 2 byte if the body is empty
+        if (mb_strlen($data) < 10) {
             throw new InvalidPacketException();
         }
         
