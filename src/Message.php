@@ -128,7 +128,7 @@ class Message
 
         $this->id = $packet['id'];
         $this->type = $packet['type'];
-        $this->body = rtrim($packet['body']);
+        $this->body = rtrim($packet['body']); // removes null bytes at the end of the string
     }
 
     /**
