@@ -17,7 +17,7 @@ RCON can be installed via. Composer:
 Usage
 -----------
 ```php
-use gries\Rcon\ConnectionFactory;
+use gries\Rcon\MessengerFactory;
 use gries\Rcon\Messenger;
 
 require_once __DIR__.'/vendor/autoload.php';
