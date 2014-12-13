@@ -111,6 +111,10 @@ class Message
      */
     public function initializeFromRconData($data)
     {
+        if (mb_strlen($data) < 4) {
+            throw new InvalidPacketException();
+        }
+        
         $packet = unpack("V1id/V1type/a*body", $data);
 
         if (!is_array($packet) ||
