@@ -23,8 +23,7 @@ use gries\Rcon\Messenger;
 require_once __DIR__.'/vendor/autoload.php';
 
 // setup the messenger
-$connection = ConnectionFactory::create('example.com', 25575, 'mypass');
-$messenger  = new Messenger($connection);
+$messenger = MessengerFactory::create('example.com', 25575, 'mypass');
 
 // send a simple message
 $response = $messenger->send('list');
