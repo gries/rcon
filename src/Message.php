@@ -128,7 +128,7 @@ class Message
 
         $this->id = $packet['id'];
         $this->type = $packet['type'];
-        $this->body = $packet['body'];
+        $this->body = rtrim($packet['body']);
     }
 
     /**
