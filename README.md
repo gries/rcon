@@ -33,7 +33,7 @@ echo $response; // a,b,c
 $response = $messenger->send('list', function($arg) {
     return explode(',', $arg);
 });
-echo $response; // ['a', 'b', 'c']
+print_r($response); // ['a', 'b', 'c']
 ```
 Running the tests
 -----------------
