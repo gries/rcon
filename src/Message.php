@@ -106,17 +106,23 @@ class Message
      * Note: the first 4 bytes that indicate the size of the packet MUST not be included.
      *
      * @param $data
+     * @param bool|$fragmented If the data comes from a fragmented response only the id and body will be present.
      *
-     * @throws Exception\InvalidPacketException
+     * @throws InvalidPacketException
      */
-    public function initializeFromRconData($data)
+    public function initializeFromRconData($data, $fragmented = false)
     {
-        // 8 byte for id + type and atleast 2 byte if the body is empty
-        if (mb_strlen($data) < 10) {
-            throw new InvalidPacketException();
+        if ($fragmented) {
+            $packet = unpack("V1id/a*body", $data);
+            $packet['type'] =  static::TYPE_RESPONSE_VALUE;
+        } else {
+            // 8 byte for id + type and atleast 2 byte if the body is empty
+            if (mb_strlen($data) < 10) {
+                throw new InvalidPacketException();
+            }
+
+            $packet = unpack("V1id/V1type/a*body", $data);
         }
-        
-        $packet = unpack("V1id/V1type/a*body", $data);
 
         if (!is_array($packet) ||
             !isset($packet['id']) ||
@@ -149,5 +155,16 @@ class Message
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Append a message to this message.
+     * This will only append the body, the id/type will be unchanged.
+     *
+     * @param Message $message
+     */
+    public function append(Message $message)
+    {
+        $this->body .= $message->getBody();
     }
 }

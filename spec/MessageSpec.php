@@ -64,4 +64,12 @@ class MessageSpec extends ObjectBehavior
         $this->shouldThrow('gries\Rcon\Exception\InvalidPacketException')
             ->during('initializeFromRconData', ['invalid']);
     }
+
+    function it_can_be_appended_to_another_message()
+    {
+        $this->beConstructedWith('a');
+        $this->append(new Message('b'));
+
+        $this->getBody()->shouldBe('ab');
+    }
 }
