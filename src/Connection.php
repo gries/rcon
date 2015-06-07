@@ -58,7 +58,31 @@ class Connection
         $messageData = $message->convertToRconData($this->currentId);
         $this->client->write($messageData);
 
-        $responseData = $this->getResponseData();
+        return $this->getResponseMessage();
+    }
+
+    /**
+     * Get the response value of the server.
+     *
+     * @return string
+     */
+    protected function getResponseMessage()
+    {
+
+        // read the first 4 bytes which include the length of the response
+        $lengthEncoded = $this->client->read(4);
+
+        if (strlen($lengthEncoded) < 4) {
+            return new Message('', Message::TYPE_RESPONSE_VALUE);
+        }
+
+        $lengthInBytes = unpack('V1size', $lengthEncoded)['size'];
+
+        if ($lengthInBytes <= 0) {
+            return new Message('', Message::TYPE_RESPONSE_VALUE);
+        }
+
+        $responseData = $this->client->read($lengthInBytes);
 
         // return an empty message if the server did not send any response
         if (null === $responseData) {
@@ -68,30 +92,11 @@ class Connection
         $responseMessage = new Message();
         $responseMessage->initializeFromRconData($responseData);
 
+        if ($lengthInBytes >= 4000) {
+            $this->handleFragmentedResponse($responseMessage);
+        }
+
         return $responseMessage;
-    }
-
-    /**
-     * Get the response value of the server.
-     *
-     * @return string
-     */
-    protected function getResponseData()
-    {
-        // read the first 4 bytes which include the length of the response
-        $lengthEncoded = $this->client->read(4);
-
-        if (strlen($lengthEncoded) < 4) {
-            return null;
-        }
-
-        $lengthInBytes = unpack('V1size', $lengthEncoded)['size'];
-
-        if ($lengthInBytes <= 0) {
-            return null;
-        }
-
-        return $this->client->read($lengthInBytes);
     }
 
     /**
@@ -109,5 +114,39 @@ class Connection
         if ($response->getType() === Message::TYPE_AUTH_FAILURE) {
             throw new AuthenticationFailedException('Could not authenticate to the server.');
         }
+    }
+
+    /**
+     * This handles a fragmented response.
+     * (https://developer.valvesoftware.com/wiki/Source_RCON_Protocol#Multiple-packet_Responses)
+     *
+     * We basically send a RESPONSE_VALUE Message to the server to force the response of the rest of the package,
+     * until we receive another package or an empty response.
+     *
+     * All the received data is then appended to the current ResponseMessage.
+     *
+     * @param $responseMessage
+     * @throws Exception\InvalidPacketException
+     */
+    protected function handleFragmentedResponse(Message $responseMessage)
+    {
+        do {
+            usleep(20000); // some servers stop responding if we send to many packages so we wait 20ms
+            $this->client->write(Message::TYPE_RESPONSE_VALUE);
+
+            $responseData = $this->client->read(4096);
+            if (empty($responseData)) {
+                break;
+            }
+            $fragmentedMessage = new Message();
+            $fragmentedMessage->initializeFromRconData($responseData, true);
+
+            $responseMessage->append($fragmentedMessage);
+
+            if ($fragmentedMessage->getType() !== Message::TYPE_RESPONSE_VALUE) {
+                break;
+            }
+
+        } while (true);
     }
 }
